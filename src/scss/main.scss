@@ -2,17 +2,19 @@ $text-color: #e5e5e5;
 $bg-color: #4e4e4f;
 $close: #ff5f57;
 $collapse: #febc2e;
-$full-screen: #26c940;
+$full-screen-btn: #26c940;
 $screen: #3c3a3a;
 $top-btn: #5e5f5e;
 $left-btn: #ff9f0b;
 $numbers-color: #7a7a7a;
+$shadow-colod: #000;
 
 @mixin circle {
     width: 1.5rem;
     height: 1.5rem;
     margin: 0 0.5rem;
     border-radius: 50%;
+    cursor: pointer;
 }
 
 .header {
@@ -27,14 +29,22 @@ $numbers-color: #7a7a7a;
 }
 
 .calc {
-    margin-left: 10%;
+    margin: 0 5%;
     padding: 1rem;
-    width: 22rem;
-    height: 30rem;
     border-radius: 5%;
     background-color: $bg-color;
     font-family: Arial, Helvetica, sans-serif;
-    box-shadow: inset 4px -4px 6px 2px rgb(0 0 0);
+    box-shadow: inset 4px -4px 6px 2px $shadow-colod;
+}
+
+.calc-small-screen {
+    width: 22rem;
+    height: 30rem;
+}
+
+.calc-full-screen {
+    width: auto;
+    height: 100%;
 }
 
 .calc-control {
@@ -54,28 +64,38 @@ $numbers-color: #7a7a7a;
     background-color: $collapse;
 }
 
-.full-screen {
+.full-screen-btn {
     @include circle;
-    background-color: $full-screen;
+    background-color: $full-screen-btn;
+}
+
+.hidden {
+    display: none;
 }
 
 .calc-screen {
     background-color: $screen;
-    height: 25%;
+    height: 7rem;
+    width: auto;
     color: $text-color;
     border-radius: 1rem 1rem 0 0;
     font-size: 4rem;
     text-align: end;
     padding: 0 0.5rem;
     line-height: 7rem;
-    box-shadow: inset 0px 0px 6px 0px rgb(0 0 0);
+    box-shadow: inset 0px 0px 6px 0px $shadow-colod;
 }
 
-.screen-font-size {
+.calc-screen-full-size {
+    height: 10rem !important;
+}
+
+.screen-size {
     font-size: 1.8rem !important;
     display: flex;
     justify-content: flex-end;
-    line-height: 5rem;
+    word-break: break-all;
+    line-height: 7rem !important;
 }
 
 .calc-buttons {
@@ -104,16 +124,16 @@ $numbers-color: #7a7a7a;
     line-height: 4rem;
     cursor: pointer;
     user-select: none;
-    box-shadow: inset 1px -1px 6px 0px rgb(0 0 0);
+    box-shadow: inset 1px -1px 6px 0px $shadow-colod;
 
     &:hover {
         filter: brightness(120%);
-        box-shadow: inset 1px -1px 6px 0px rgb(0 0 0);
+        box-shadow: inset 1px -1px 6px 0px $shadow-colod;
     }
 
     &:active {
         filter: brightness(90%);
-        box-shadow: inset 0px 0px 6px 0px rgb(0 0 0);
+        box-shadow: inset 0px 0px 6px 0px $shadow-colod;
     }
 }
 
