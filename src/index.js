@@ -23,10 +23,7 @@ document.addEventListener("DOMContentLoaded", () => {
     let b = '';
     let sign = '';
     let finish = false;
-    let arrNums = ['0'];
-    let arrNums2 = ['0'];
     let arrStr = [];
-
     screen.textContent = '';
 
     function clearNum() {
@@ -34,9 +31,6 @@ document.addEventListener("DOMContentLoaded", () => {
         b = '';
         sign = '';
         finish = false;
-
-        arrNums = ['0'];
-        arrNums2 = ['0'];
         arrStr = [];
     }
 
@@ -57,29 +51,43 @@ document.addEventListener("DOMContentLoaded", () => {
 
         sign = operand;
         screen.textContent = sign;
+
         console.log(a, sign, b);
     }
 
+    function noMultiNull(num) {
+        if ((a === '0' || a === '') && num === '0' && a !== '.') {
+            a = '';
+            return;
+        }
+
+        if ((b === '0' || b === '') && num === '0' && b !== '.') {
+            b = '';
+            return;
+        }
+    }
+
     function numbersSelection(num) {
-        console.log(finish)
         checkSizeColorScreen();
+        noMultiNull(num);
 
         if (b === '' && sign === '') {
             a += num;
             screen.textContent = a;
+
             console.log(a, sign, b);
         }
         else if (b !== '' && sign !== '' && finish) {
-
             b = num;
             finish = false;
             screen.textContent = b;
-            console.log(a, sign, b);
 
+            console.log(a, sign, b);
         }
         else {
             b += num;
             screen.textContent = b;
+
             console.log(a, sign, b);
         }
         return;
@@ -100,6 +108,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     screen.style.color = 'red';
                     screen.classList.add('screen-size');
                     screen.textContent = 'на 0 делить нельзя';
+
                     clearNum();
                     return;
                 } else a = a / b;
@@ -108,9 +117,12 @@ document.addEventListener("DOMContentLoaded", () => {
                 a = a * b;
                 break;
         }
+
         Math.round(a);
+
         screen.textContent = a;
         finish = true;
+
         console.log(a, sign, b);
     }
 
@@ -122,6 +134,7 @@ document.addEventListener("DOMContentLoaded", () => {
             b = b - b * 2;
             screen.textContent = b;
         }
+
         console.log(a, sign, b)
     }
 
@@ -145,13 +158,11 @@ document.addEventListener("DOMContentLoaded", () => {
             }
 
         Math.round(a);
-        arrStr = a.toString().split('');
+        resultCheck(a);
 
-        if (arrStr.length > 9) {
-            screen.classList.add('screen-size');
-        }
         screen.textContent = a;
         finish = true;
+
         console.log(a, sign, b);
     }
 
@@ -188,20 +199,10 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         if (event.target === document.querySelector('#dot')) {
-            if (arrNums === 1) {
-                arrNums.push('0');
-
-            }
-
-            if (arrNums2 === 2) {
-                arrNums.push('0');
-
-            }
         }
 
         if (event.target === document.querySelector('#percent')) {
             percentCount(sign);
-            arrNums = ['0'];
         }
 
         resultCheck(a);
