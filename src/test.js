@@ -26,66 +26,86 @@ document.addEventListener("DOMContentLoaded", () => {
     let arrNums = ['0'];
     let arrNums2 = ['0'];
     let arrStr = [];
+    let fractionalNum = '';
 
     screen.textContent = '';
 
-    function clearNum() {
+    function clearScreen() {
         a = '';
         b = '';
         sign = '';
-        finish = false;
-
         arrNums = ['0'];
         arrNums2 = ['0'];
         arrStr = [];
-    }
 
-    function checkSizeColorScreen() {
         screen.classList.remove('screen-size');
         screen.style.color = '';
-    }
-
-    function clearScreen() {
-        clearNum();
-        checkSizeColorScreen();
-
         screen.textContent = 0;
     }
 
     function operandSelection(operand) {
-        checkSizeColorScreen();
-
         sign = operand;
         screen.textContent = sign;
+        arrNums2 = ['0'];
         console.log(a, sign, b);
+    }
+
+    function checkFullScreen() {
+
+        if (screen.classList.contains('screen-size')) {
+            screen.classList.remove('screen-size');
+        }
+
+        if (finish) {
+            screen.style.color = '';
+        }
     }
 
     function numbersSelection(num) {
         console.log(finish)
-        checkSizeColorScreen();
+        checkFullScreen();
 
-        if (b === '' && sign === '') {
-            a += num;
-            screen.textContent = a;
-            console.log(a, sign, b);
+        if (b === '' && sign === '' && arrNums.length < 11) {
+
+            if (arrNums.length === 1) {
+                screen.textContent = '0';
+                arrNums.push(num);
+            }
+            if (num === '0' && arrNums.length > 2 || num !== '0') {
+                a += num;
+                screen.textContent = a;
+                arrNums.push(num);
+                console.log(a, sign, b);
+            }
+            else if (arrNums[arrNums.length - 1] === '0') return;
+
         }
-        else if (b !== '' && sign !== '' && finish) {
+        else if (b !== '' && sign !== '' && finish && arrNums2.length < 9) {
 
-            b = num;
-            finish = false;
-            screen.textContent = b;
-            console.log(a, sign, b);
+            if (num === '0' && arrNums2.length > 2 || num !== '0' || num === '0' && sign === '÷') {
+                b = num;
+                finish = false;
+                screen.textContent = b;
+                arrNums2.push(num);
+                console.log(a, sign, b);
+            }
+            else if (arrNums2[arrNums2.length - 1] === '0') return;
 
         }
-        else {
+        else if ((num === '0' && arrNums2.length >= 2 || num !== '0')) {
+            // && sign !== '' && arrNums2.length < 10
             b += num;
             screen.textContent = b;
+            arrNums2.push(num);
             console.log(a, sign, b);
         }
-        return;
+        else if (arrNums2[arrNums2.length - 1] === '0' && sign) {
+            screen.textContent = '0';
+            return;
+        }
     }
 
-    function resultCalculation() {
+    function resultCalculation(a, b, sign) {
         if (b === '' && sign !== '÷') b = a;
 
         switch (sign) {
@@ -100,59 +120,39 @@ document.addEventListener("DOMContentLoaded", () => {
                     screen.style.color = 'red';
                     screen.classList.add('screen-size');
                     screen.textContent = 'на 0 делить нельзя';
-                    clearNum();
                     return;
                 } else a = a / b;
                 break;
             case ('X'):
                 a = a * b;
-                break;
         }
-        Math.round(a);
-        screen.textContent = a;
         finish = true;
-        console.log(a, sign, b);
+        screen.textContent = a;
+        console.log(a, sign, b)
+        return (a, finish);
     }
 
     function changePlusMinus() {
-        if (sign === '' || finish) {
-            a = a - a * 2;
-            screen.textContent = a;
-        } else {
-            b = b - b * 2;
-            screen.textContent = b;
-        }
+        a = a - a * 2;
         console.log(a, sign, b)
+        screen.textContent = a;
     }
 
-    function percentCount(sign) {
-        if (b === '' || finish) {
-            a = a / 100;
-        } else
-            switch (sign) {
-                case ('+'):
-                    a = +a + (+b) * (+a) / 100;
-                    break;
-                case ('-'):
-                    a = a - b * a / 100;
-                    break;
-                case ('÷'):
-                    a = a / b / 100;
-                    break;
-                case ('X'):
-                    a = a * b / 100;
-                    break;
-            }
-
-        Math.round(a);
-        arrStr = a.toString().split('');
-
-        if (arrStr.length > 9) {
-            screen.classList.add('screen-size');
+    function percentCount(a, b, sign) {
+        switch (sign) {
+            case ('÷'):
+                if (b === '') {
+                    screen.style.color = 'red';
+                    screen.classList.add('screen-size');
+                    screen.textContent = 'на 0 делить нельзя';
+                    return;
+                } else a = a / b / 100;
+                break;
+            case ('X'):
+                a = a * b / 100;
         }
-        screen.textContent = a;
-        finish = true;
         console.log(a, sign, b);
+        screen.textContent = a;
     }
 
     function resultCheck(result) {
@@ -167,21 +167,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const key = event.target.textContent;
 
-        if (digit.includes(key)) {
-            numbersSelection(key);
-        }
-
-        if (action.includes(key)) {
-            operandSelection(key);
-        }
-
-        if (event.target == document.querySelector('#ac')) {
-            clearScreen();
-        }
-
         if (event.target === document.querySelector('#equal')) {
-            resultCalculation();
+            resultCalculation(a, b, sign);
         }
+
+        console.log(a)
 
         if (event.target === document.querySelector('#plus-minus')) {
             changePlusMinus(key);
@@ -190,7 +180,6 @@ document.addEventListener("DOMContentLoaded", () => {
         if (event.target === document.querySelector('#dot')) {
             if (arrNums === 1) {
                 arrNums.push('0');
-
             }
 
             if (arrNums2 === 2) {
@@ -200,11 +189,23 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         if (event.target === document.querySelector('#percent')) {
-            percentCount(sign);
+            percentCount(a, b, sign);
             arrNums = ['0'];
         }
 
         resultCheck(a);
+
+        if (event.target == document.querySelector('#ac')) {
+            clearScreen();
+        }
+
+        if (digit.includes(key)) {
+            numbersSelection(key);
+        }
+
+        if (action.includes(key)) {
+            operandSelection(key);
+        }
     });
 
     document.querySelector('#calc-control').addEventListener('click', event => {
